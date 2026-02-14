@@ -27,7 +27,7 @@ async function Login(req, res) {
     if(!passwordMatch){
         return res.status(400).json({ message: "Invalid credentials" });
     }
-    
+
     /*
     await sendEmail({
         to: userExists.email,
@@ -92,9 +92,13 @@ function dashboard(req, res) {
 }
 //ADMIN FUNCTION
 function admin(req, res) {
-    console.log(req.user.id,
-        req.user.role
-    );
+    const UserId= req.user.id;
+    const user= users.find(user => user.id === UserId);
+    if(!user){
+        return res.status(404).json({ message: "User not found" });
+    }
+    const{password, ...userWithoutPassword} = user;
+    res.status(200).json({ message: "User found", user: userWithoutPassword });
 }
 function getAllUsers(req, res) {
     res.status(200).json({ message: "Users found", data: { users }});

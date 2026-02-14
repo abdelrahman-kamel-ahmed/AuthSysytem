@@ -5,6 +5,7 @@ const uploader = require('../utils/uploadserrvice').uploader;
 const authController = require('../Controllers/authController');
 const { authMiddleware } = require('../MiddleWares/authMiddleWare');
 const { roleMiddleWare } = require('../MiddleWares/roleMiddleWare');
+const { sysystemRoles } = require('../utils/roleService');
 //LOGIN ROUTE
 router.post('/login', authController.Login);
 //REGISTER ROUTE
@@ -19,13 +20,13 @@ router.post('/login', authController.Login);
 router.post('/register', uploader.fields([{ name: 'avatar', maxCount: 1 }, { name: 'docs', maxCount: 3 }]), authController.Register);
 
 //GET ALL USERS ROUTE only for admins
-router.get('/allusers', authMiddleware ,roleMiddleWare('admin'),authController.getAllUsers);
+router.get('/allusers', authMiddleware ,roleMiddleWare(sysystemRoles.SuperAdmin, sysystemRoles.ADMIN),authController.getAllUsers);
 
 //MYPROFILE ROUTE
 router.get('/myProfile', authMiddleware,authController.myProfile);
 //DASHBOARD ROUTE
 router.get('/dashboard', authMiddleware,authController.dashboard);
 //ADMIN ROUTE
-router.get('/admin', roleMiddleWare('admin'),authController.admin);
+router.get('/admin', authMiddleware,roleMiddleWare(sysystemRoles.ADMIN, sysystemRoles.SuperAdmin),authController.admin);
 //EXPORT ROUTER TO USE IN SERVER.JS
 module.exports = router;
