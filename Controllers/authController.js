@@ -72,7 +72,13 @@ async function Register(req, res) {
     res.status(201).json({ message: "User registered successfully", user: newUser });
 }
 function myProfile(req, res) {
-    console(req.user.id);
+    const UserId= req.user.id;
+    const user= users.find(user => user.id === UserId);
+    if(!user){
+        return res.status(404).json({ message: "User not found" });
+    }
+    const{password, ...userWithoutPassword} = user;
+    res.status(200).json({ message: "User found", user: userWithoutPassword });
 }
 function dashboard(req, res) {
     console(req.user.id);
