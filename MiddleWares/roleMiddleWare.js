@@ -1,7 +1,8 @@
 exports.roleMiddleWare=function(...allowedRoles){
 
-    return function (request, response, next) {
-        const { role } = request.user;
+    return (request, response, next) => {
+        console.log(request.user);
+        const  role  = request.user.role;
         if (!role) {
             return response.status(401).json({ message: "un-authorized" });
         }

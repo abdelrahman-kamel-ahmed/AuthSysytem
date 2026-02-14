@@ -4,13 +4,14 @@ const { verifyToken } = require("../utils/tokenService");
 exports.authMiddleware = function (request, response, next) {
 
   const authorization = request.headers.authorization;
+  console.log(authorization);
 
   // Check Authorization
   if (!authorization) {
-    return response.status(401).json({ message: "un-authorized" });
+    return response.status(401).json({ message: "un-authorized 1" });
   }
 
-  const { type, token } = authorization.split(" ");
+  const [type, token] = authorization.split(" ");
   
   // Check Type
   if (type !== "Bearer") {
@@ -19,13 +20,14 @@ exports.authMiddleware = function (request, response, next) {
 
   // Check Token
   if (!token) {
-    return response.status(401).json({ message: "un-authorized" });
+    return response.status(401).json({ message: "un-authorized 2" });
   }
 
   // Token
   try {
     const payload = verifyToken(token);
-    request.user = payload; // Generate new Key Request
+    request.user = payload; 
+    // Generate new Key Request
 
     next();
   } catch (error) {

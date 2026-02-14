@@ -27,11 +27,15 @@ async function Login(req, res) {
     if(!passwordMatch){
         return res.status(400).json({ message: "Invalid credentials" });
     }
+    
+    /*
     await sendEmail({
         to: userExists.email,
         subject: "Login Notification",
         text: `Hello ${userExists.username}, you have successfully logged in!`
     });
+    */
+
     // Generate JWT token
     const token = generateToken(userExists.email, userExists.id, userExists.role);
     res.status(200).json({ message: "Login successful", data: {token, user:{email:userExists.email, role:userExists.role}}});
@@ -71,7 +75,9 @@ async function Register(req, res) {
     users.push(newUser);    
     res.status(201).json({ message: "User registered successfully", user: newUser });
 }
+//MYPROFILE FUNCTION
 function myProfile(req, res) {
+    console.log(req.user);
     const UserId= req.user.id;
     const user= users.find(user => user.id === UserId);
     if(!user){
@@ -80,15 +86,21 @@ function myProfile(req, res) {
     const{password, ...userWithoutPassword} = user;
     res.status(200).json({ message: "User found", user: userWithoutPassword });
 }
+//DASHBOARD FUNCTION
 function dashboard(req, res) {
     console(req.user.id);
 }
+//ADMIN FUNCTION
 function admin(req, res) {
     console.log(req.user.id,
         req.user.role
     );
 }
-module.exports = { Login, Register, myProfile , dashboard , admin };
+function getAllUsers(req, res) {
+    res.status(200).json({ message: "Users found", data: { users }});
+}
+
+module.exports = { Login, Register, myProfile , dashboard , admin, getAllUsers };
 
 /* 
     Another way to export 
